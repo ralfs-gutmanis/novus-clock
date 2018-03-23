@@ -1,0 +1,41 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 33vh;
+  background-color: #444;
+  grid-column-start: left;
+  grid-column-end: right;
+  user-select: none;
+  cursor: pointer;
+}
+
+.button--white {
+  transform: scale(-1, -1);
+  background-color: white;
+  color: black;
+  grid-row-start: top;
+  grid-row-end: mid;
+}
+
+.button--black {
+  background-color: black;
+  color: white;
+  grid-row-start: mid;
+  grid-row-end: bot;
+}
+
+.button--blink {
+  background-color: red;
+  color: white;
+}
+
+.button--is-winner {
+  background-color: green;
+  color: white;
+}
+
+.button--is-loser {
+  background-color: red;
+  color: white;
+}
