@@ -62,11 +62,11 @@ class App extends Component {
 
     let newTime = players[activePlayerIndex] - 1;
     if (newTime <= 0) {
-      this.beep(1000);
+      App.beep(1000);
       newTime = 0;
       this.stopGame();
     } else if (newTime < 10) {
-      this.beep(150);
+      App.beep(150);
     }
 
     players[activePlayerIndex] = newTime;
@@ -110,6 +110,10 @@ class App extends Component {
     return activePlayerIndex === playerNumber;
   }
 
+  handleChooseTime(seconds) {
+    this.resetGame(seconds);
+  }
+
   renderButton(playerNumber) {
     return (
       <Button
@@ -129,7 +133,10 @@ class App extends Component {
         className={`button--reset ${isLeftSide ? 'button--left' : 'button--right'}`}
         onClick={() => this.resetGame(this.state.maxTime)}
       >
-        RESET<br />GAME
+        <span className="vertical">
+          RESET<br />
+          GAME
+        </span>
       </button>
     );
   }
@@ -140,7 +147,9 @@ class App extends Component {
         className={`button--reset ${isLeftSide ? 'button--left' : 'button--right'}`}
         onClick={() => this.setState({ isConfigVisible: true })}
       >
-        CONFIG
+        <span className="vertical">
+          CONFIG
+        </span>
       </button>
     );
   }

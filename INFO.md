@@ -3,3 +3,7 @@ https://github.com/gitname/react-gh-pages
 
 Lint used
 https://www.npmjs.com/package/eslint-config-airbnb
+
+dependencies
+npm i react-scripts
+npm install

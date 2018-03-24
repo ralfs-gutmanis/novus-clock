@@ -2,8 +2,8 @@
   display: grid;
   width: 100vw;
   height: 100vh;
-  grid-template-rows: [top] 2fr [c] 1fr [mid] 1fr [d] 2fr [bot];
-  grid-template-columns: [left] 1fr [a] 8fr [b] 1fr [right];
+  grid-template-rows: [top] 2fr [c] 75px [mid] 75px [d] 2fr [bot];
+  grid-template-columns: [left] 50px [a] 1fr [b] 50px [right];
 }
 
 .config {
@@ -63,4 +63,8 @@
 .button--right {
   grid-column-start: right;
   grid-column-end: b;
+}
+
+.vertical {
+  writing-mode: vertical-lr;
 }

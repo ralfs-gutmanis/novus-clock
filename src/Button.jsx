@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import './Button.css';
 
 class Button extends Component {
@@ -70,22 +70,20 @@ class Button extends Component {
 
   render() {
     return (
-      <div
+      <button
         className={`button ${this.playerColor()} ${this.cssClass()}`}
         onClick={() => this.handleClick()}
         onTouchStart={() => this.handleClick()}
-        onKeyPress={this.handleClick()}
-        role="button"
-        tabIndex={0}
+        onKeyPress={() => this.handleClick()}
       >
         {this.props.value}
-      </div>
+      </button>
     );
   }
 }
 
 Button.propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
   onClick: PropTypes.func.isRequired,
   playerWhite: PropTypes.bool.isRequired,
   isGameFinished: PropTypes.bool.isRequired,
