@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import update from 'immutability-helper';
 import Button from './Button';
 import './App.css';
 
@@ -6,7 +7,9 @@ import './App.css';
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const maxTime = 90;
 const initialState = {
-  players: [maxTime, maxTime],
+  history: [{
+    players: [maxTime, maxTime],
+  }],
   maxTime,
   activePlayerIndex: 0,
   isGameStarted: false,
@@ -15,7 +18,7 @@ const initialState = {
 };
 
 class App extends Component {
-  static beep(length) {
+  static beep(length, frequency = 1000) {
     const oscillator = audioCtx.createOscillator();
     const gainNode = audioCtx.createGain();
 
@@ -23,7 +26,7 @@ class App extends Component {
     gainNode.connect(audioCtx.destination);
 
     gainNode.gain.value = 0.5;
-    oscillator.frequency.value = 1000;
+    oscillator.frequency.value = frequency;
     oscillator.type = 0;
 
     oscillator.start();
@@ -32,6 +35,21 @@ class App extends Component {
       () => { oscillator.stop(); },
       length,
     );
+  }
+
+  static shortBeep(frequency, type) {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = type;
+    o.connect(g);
+    o.frequency.value = frequency;
+    g.connect(audioCtx.destination);
+    o.start(0);
+    g.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 1);
+  }
+
+  static buttonPressedBeep() {
+    App.shortBeep(440.0, 'sine');
   }
 
   constructor(props) {
@@ -49,18 +67,22 @@ class App extends Component {
 
     this.setState({
       maxTime: newSeconds,
-      players: [newSeconds, newSeconds],
+      history: [{
+        players: [maxTime, maxTime],
+      }],
       isGameStarted: false,
       isGameFinished: false,
       isConfigVisible: false,
     });
   }
 
+
   tick() {
     const { activePlayerIndex } = this.state;
-    const players = this.state.players.slice();
+    const currentIndex = this.state.history.length - 1;
+    const current = this.state.history[currentIndex].players.slice();
 
-    let newTime = players[activePlayerIndex] - 1;
+    let newTime = current[activePlayerIndex] - 1;
     if (newTime <= 0) {
       App.beep(1000);
       newTime = 0;
@@ -69,10 +91,12 @@ class App extends Component {
       App.beep(150);
     }
 
-    players[activePlayerIndex] = newTime;
+    const newHistory = update(this.state.history, {
+      [currentIndex]: { players: { [activePlayerIndex]: { $set: newTime } } },
+    });
 
     this.setState({
-      players,
+      history: newHistory,
     });
   }
 
@@ -90,18 +114,29 @@ class App extends Component {
     }
 
     if (!this.state.isGameStarted) {
+      App.buttonPressedBeep();
+
       this.interval = setInterval(this.tick.bind(this), 1000);
       this.setState({
         isGameStarted: true,
         activePlayerIndex: playerNumber,
       });
+
       return;
     }
 
     if (this.playerIsActive(playerNumber)) {
+      const history = this.state.history.slice();
+      const current = history[history.length - 1];
+
+      App.buttonPressedBeep();
+
       clearInterval(this.interval);
       this.interval = setInterval(this.tick.bind(this), 1000);
-      this.setState({ activePlayerIndex: (this.state.activePlayerIndex + 1) % 2 });
+      this.setState({
+        activePlayerIndex: (this.state.activePlayerIndex + 1) % 2,
+        history: history.concat(current),
+      });
     }
   }
 
@@ -115,9 +150,12 @@ class App extends Component {
   }
 
   renderButton(playerNumber) {
+    const history = this.state.history.slice();
+    const current = history[history.length - 1];
+
     return (
       <Button
-        value={this.state.players[playerNumber]}
+        value={current.players[playerNumber]}
         isGameFinished={this.state.isGameFinished}
         isGameStarted={this.state.isGameStarted}
         onClick={() => this.clickButton(playerNumber)}

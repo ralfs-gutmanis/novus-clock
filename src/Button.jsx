@@ -68,13 +68,34 @@ class Button extends Component {
     return this.props.myTurn && this.props.value % 2 === 1;
   }
 
+  isDisabled() {
+    if (!this.props.isGameStarted) {
+      return false;
+    }
+
+    if (this.props.isGameFinished) {
+      return true;
+    }
+
+    return !this.props.myTurn;
+  }
+
+  rippleClass() {
+    if (this.props.isGameStarted) {
+      return 'button--waiting';
+    }
+
+    return '';
+  }
+
   render() {
     return (
       <button
-        className={`button ${this.playerColor()} ${this.cssClass()}`}
+        className={`button ${this.rippleClass()} ${this.playerColor()} ${this.cssClass()}`}
         onClick={() => this.handleClick()}
         onTouchStart={() => this.handleClick()}
         onKeyPress={() => this.handleClick()}
+        disabled={this.isDisabled()}
       >
         {this.props.value}
       </button>
