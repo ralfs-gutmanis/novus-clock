@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import update from 'immutability-helper';
+import { buttonPressBeep, countdownBeep, losingBeep } from './Beeper';
 import Button from './Button';
 import './App.css';
 
-
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const maxTime = 90;
 const initialState = {
   history: [{
@@ -18,40 +17,6 @@ const initialState = {
 };
 
 class App extends Component {
-  static beep(length, frequency = 1000) {
-    const oscillator = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-
-    gainNode.gain.value = 0.5;
-    oscillator.frequency.value = frequency;
-    oscillator.type = 0;
-
-    oscillator.start();
-
-    setTimeout(
-      () => { oscillator.stop(); },
-      length,
-    );
-  }
-
-  static shortBeep(frequency, type) {
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.type = type;
-    o.connect(g);
-    o.frequency.value = frequency;
-    g.connect(audioCtx.destination);
-    o.start(0);
-    g.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 1);
-  }
-
-  static buttonPressedBeep() {
-    App.shortBeep(440.0, 'sine');
-  }
-
   constructor(props) {
     super(props);
     this.state = initialState;
@@ -84,11 +49,11 @@ class App extends Component {
 
     let newTime = current[activePlayerIndex] - 1;
     if (newTime <= 0) {
-      App.beep(1000);
+      losingBeep();
       newTime = 0;
       this.stopGame();
     } else if (newTime < 10) {
-      App.beep(150);
+      countdownBeep();
     }
 
     const newHistory = update(this.state.history, {
@@ -114,7 +79,7 @@ class App extends Component {
     }
 
     if (!this.state.isGameStarted) {
-      App.buttonPressedBeep();
+      buttonPressBeep();
 
       this.interval = setInterval(this.tick.bind(this), 1000);
       this.setState({
@@ -129,7 +94,7 @@ class App extends Component {
       const history = this.state.history.slice();
       const current = history[history.length - 1];
 
-      App.buttonPressedBeep();
+      buttonPressBeep();
 
       clearInterval(this.interval);
       this.interval = setInterval(this.tick.bind(this), 1000);
