@@ -13,8 +13,8 @@ function genericBeep(
   oscillator.connect(gainNode);
   gainNode.connect(audioCtx.destination);
 
-  gainNode.gain.value = volume;
-  oscillator.frequency.value = frequency;
+  gainNode.gain.value = volume; // TODO deprecated
+  oscillator.frequency.value = frequency; // TODO deprecated
   oscillator.type = 'sine';
 
   oscillator.start();

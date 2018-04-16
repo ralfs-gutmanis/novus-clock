@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import update from 'immutability-helper';
-import { buttonPressBeep, countdownBeep, losingBeep } from './Beeper';
-import Button from './Button';
-import './App.css';
+import { Link } from 'react-router-dom';
+import { buttonPressBeep, countdownBeep, losingBeep } from './../beeper/Beeper';
+import Button from './../button/Button';
+import './../App.css';
 
 const maxTime = 90;
 const initialState = {
@@ -13,10 +14,15 @@ const initialState = {
   activePlayerIndex: 0,
   isGameStarted: false,
   isGameFinished: false,
-  isConfigVisible: false,
 };
 
 class Game extends Component {
+  static renderConfigButton() {
+    return (
+      <Link href="#config" className="button--reset button--right" to="/config">CONFIG</Link>
+    );
+  }
+
   constructor(props) {
     super(props);
     this.state = initialState;
@@ -37,7 +43,6 @@ class Game extends Component {
       }],
       isGameStarted: false,
       isGameFinished: false,
-      isConfigVisible: false,
     });
   }
 
@@ -130,10 +135,10 @@ class Game extends Component {
     );
   }
 
-  renderResetButton(isLeftSide) {
+  renderResetButton() {
     return (
       <button
-        className={`button--reset ${isLeftSide ? 'button--left' : 'button--right'}`}
+        className="button--reset button--left"
         onClick={() => this.resetGame(this.state.maxTime)}
       >
         <span className="vertical">
@@ -141,31 +146,6 @@ class Game extends Component {
           GAME
         </span>
       </button>
-    );
-  }
-
-  renderConfigButton(isLeftSide) {
-    return (
-      <button
-        className={`button--reset ${isLeftSide ? 'button--left' : 'button--right'}`}
-        onClick={() => this.setState({ isConfigVisible: true })}
-      >
-        <span className="vertical">
-          CONFIG
-        </span>
-      </button>
-    );
-  }
-
-  renderConfig(visible) {
-    return (
-      <div className={`config ${visible ? '' : 'hide'}`}>
-        {this.renderChooseTimeButton(60)}
-        {this.renderChooseTimeButton(75)}
-        {this.renderChooseTimeButton(90)}
-        {this.renderChooseTimeButton(105)}
-        {this.renderChooseTimeButton(120)}
-      </div>
     );
   }
 
@@ -185,9 +165,8 @@ class Game extends Component {
       <div className="grid">
         {this.renderButton(0)}
         {this.renderButton(1)}
-        {this.renderResetButton(true)}
-        {this.renderConfigButton(false)}
-        {this.renderConfig(this.state.isConfigVisible)}
+        {this.renderResetButton()}
+        {Game.renderConfigButton()}
       </div>
     );
   }

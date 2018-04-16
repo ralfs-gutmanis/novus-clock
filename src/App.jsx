@@ -1,12 +1,16 @@
 import React from 'react';
 import {
   Route,
-  // Link
+  Switch,
 } from 'react-router-dom';
-import Game from './Game';
+import Game from './game/Game';
+import Config from './config/Config';
 
 const App = () => (
-  <Route path="/" component={Game} />
+  <Switch>
+    <Route exact path="/" component={Game} />
+    <Route path="/config" component={Config} />
+  </Switch>
 );
 
 export default App;
