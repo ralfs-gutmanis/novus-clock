@@ -7,7 +7,7 @@ import './Reset.css';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import clockApp from './actions/Reducers';
+import clockApp from './config/Reducers';
 
 
 const store = createStore(clockApp);

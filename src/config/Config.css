@@ -1,15 +1,69 @@
 .config-grid {
   display: grid;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   grid-template-columns: 1fr [left] 2fr [right] 1fr;
   grid-template-areas: ". main .";
+  background-color: #C5CAE9;
 }
 
 .config-main {
   grid-area: main;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  background-color: #dddddd;
+  padding: 15px;
+  background-color: #3F51B5;
+  color: white;
+  font-size: 16px;
+  overflow: auto;
+}
+
+input[type=text],
+input[type=number],
+input[type=password] {
+    box-sizing : border-box;
+    width: 100%;
+    padding: 10px
+}
+
+.input-container {
+  display: block;
+  margin-bottom: 30px;
+}
+
+.flex-vertical-center {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.input-label {
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.checkbox-label {
+  display: inline-block;
+}
+
+h1 {
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+.novus-button {
+  padding: 15px;
+  border: 0;
+  margin-left: 5px;
+  margin-right: 5px;
+  font-size: 16px;
+  color: white;
+}
+.save {
+  background-color: #4CAF50;
+}
+
+.cancel {
+  background-color: #FF5722;
+  text-decoration: none;
 }

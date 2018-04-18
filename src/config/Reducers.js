@@ -3,6 +3,7 @@ import {
   ENABLE_SOUND,
   ENABLE_VIBRATION,
   SET_TIMER_MAX,
+  SET_BONUS_TIME,
 } from './ActionTypes';
 
 
@@ -33,10 +34,20 @@ function setTimerMax(state = 90, action) {
   }
 }
 
+function setBonusTime(state = 0, action) {
+  switch (action.type) {
+    case SET_BONUS_TIME:
+      return action.seconds;
+    default:
+      return state;
+  }
+}
+
 const clockApp = combineReducers({
   vibrationEnabled: enableVibration,
   soundEnabled: enableSound,
   timerMax: setTimerMax,
+  bonusTime: setBonusTime,
 });
 
 export default clockApp;

@@ -4,12 +4,12 @@ import {
   Switch,
 } from 'react-router-dom';
 import Game from './game/Game';
-import Config from './config/Config';
+import ConfigContainer from './config/ConfigContainer';
 
 const App = () => (
   <Switch>
     <Route exact path="/" component={Game} />
-    <Route path="/config" component={Config} />
+    <Route path="/config" component={ConfigContainer} />
   </Switch>
 );
 
