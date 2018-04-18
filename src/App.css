@@ -6,6 +6,10 @@
   grid-template-columns: [left] 50px [a] 1fr [b] 50px [right];
 }
 
+.grid-game-over {
+  grid-template-columns: [left] 2fr [a] 1fr [b] 2fr [right];
+}
+
 .config {
   display: grid;
   grid-template-rows: repeat(5, 1fr);
@@ -53,6 +57,7 @@
   border: 5px solid black;
   user-select: none;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .button--left {
@@ -64,6 +69,12 @@
 .button--right {
   grid-column-start: right;
   grid-column-end: b;
+}
+
+.button--game-over {
+  grid-row-start: top;
+  grid-row-end: bot;
+  font-size: 15vh;
 }
 
 .vertical {

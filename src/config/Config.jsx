@@ -7,8 +7,10 @@ import './Switch.css';
 class Config extends React.Component {
   static parseValue(value, type) {
     switch (type) {
-      case 'number':
-        return Number.isNaN(parseInt(value, 10)) ? null : parseInt(value, 10);
+      case 'number': {
+        const nextValue = Number.isNaN(parseInt(value, 10)) ? null : parseInt(value, 10);
+        return nextValue < 0 ? 0 : nextValue;
+      }
       default:
         return value;
     }
@@ -21,6 +23,7 @@ class Config extends React.Component {
       soundEnabled: props.soundEnabled,
       vibrationEnabled: props.vibrationEnabled,
       bonusTime: props.bonusTime,
+      minimumTime: props.minimumTime,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -44,6 +47,7 @@ class Config extends React.Component {
     this.props.enableSound(this.state.soundEnabled);
     this.props.enableVibration(this.state.vibrationEnabled);
     this.props.setBonusTime(this.state.bonusTime);
+    this.props.setMinimumTime(this.state.minimumTime);
   }
 
   render() {
@@ -59,6 +63,16 @@ class Config extends React.Component {
                 pattern="[0-9]*"
                 name="timerMax"
                 value={`${this.state.timerMax}`}
+                onChange={this.handleChange}
+              />
+            </label>
+            <label className="input-container" htmlFor="minimumTime">
+              <span className="input-label">Minimum time per move</span>
+              <input
+                type="number"
+                pattern="[0-9]*"
+                name="minimumTime"
+                value={`${this.state.minimumTime}`}
                 onChange={this.handleChange}
               />
             </label>
@@ -124,10 +138,12 @@ Config.propTypes = {
   soundEnabled: PropTypes.bool.isRequired,
   vibrationEnabled: PropTypes.bool.isRequired,
   bonusTime: PropTypes.number.isRequired,
+  minimumTime: PropTypes.number.isRequired,
   setTimerMax: PropTypes.func.isRequired,
   setBonusTime: PropTypes.func.isRequired,
   enableSound: PropTypes.func.isRequired,
   enableVibration: PropTypes.func.isRequired,
+  setMinimumTime: PropTypes.func.isRequired,
 };
 
 export default Config;

@@ -15,22 +15,18 @@ const initialState = {
   history: [{
     players: [0, 0],
   }],
+  activePlayerIndex: 0,
+  isGameStarted: false,
+  isGameFinished: false,
+  // Config
   maxTime: 0,
   soundEnabled: true,
   vibrationEnabled: true,
   bonusTime: 0,
-  activePlayerIndex: 0,
-  isGameStarted: false,
-  isGameFinished: false,
+  minimumTime: 0,
 };
 
 class Game extends Component {
-  static renderConfigButton() {
-    return (
-      <Link href="#config" className="button--reset button--right" to="/config">CONFIG</Link>
-    );
-  }
-
   constructor(props) {
     super(props);
     this.state = this.getEmptyState();
@@ -49,6 +45,7 @@ class Game extends Component {
         soundEnabled: this.props.soundEnabled,
         vibrationEnabled: this.props.vibrationEnabled,
         bonusTime: this.props.bonusTime,
+        minimumTime: this.props.minimumTime,
         history: [{
           players: [this.props.timerMax, this.props.timerMax],
         }],
@@ -154,13 +151,17 @@ class Game extends Component {
     }
 
     if (this.playerIsActive(playerNumber)) {
+      this.feedback(BEEP_BUTTON_PRESS);
+      clearInterval(this.interval); // TODO refactor --> StopCounting()
       const history = this.state.history.slice();
       const current = history[history.length - 1];
+      const activePlayerIndex = this.state.activePlayerIndex;
 
-      this.feedback(BEEP_BUTTON_PRESS);
+      if (current.players[activePlayerIndex] < this.props.minimumTime) {
+        current.players[activePlayerIndex] = this.props.minimumTime;
+      }
 
-      clearInterval(this.interval);
-      this.interval = setInterval(this.tick.bind(this), 1000);
+      this.interval = setInterval(this.tick.bind(this), 1000); // TODO refactor --> StartCounting()
       this.setState({
         activePlayerIndex: (this.state.activePlayerIndex + 1) % 2,
         history: history.concat(current),
@@ -190,9 +191,12 @@ class Game extends Component {
   }
 
   renderResetButton() {
+    const isGameFinished = this.state.isGameFinished;
+    const gameOverClass = isGameFinished ? 'button--game-over' : '';
+
     return (
       <button
-        className="button--reset button--left"
+        className={`button--reset button--left ${gameOverClass}`}
         onClick={() => this.resetGame(this.state.maxTime)}
       >
         <span className="vertical">
@@ -203,13 +207,31 @@ class Game extends Component {
     );
   }
 
-  render() {
+  renderConfigButton() {
+    const isGameFinished = this.state.isGameFinished;
+    const gameOverClass = isGameFinished ? 'button--game-over' : '';
+
     return (
-      <div className="grid">
+      <Link
+        href="#config"
+        className={`button--reset button--right ${gameOverClass}`}
+        to="/config"
+      >
+        CONFIG
+      </Link>
+    );
+  }
+
+  render() {
+    const isGameFinished = this.state.isGameFinished;
+    const gameOverClass = isGameFinished ? 'grid-game-over' : '';
+
+    return (
+      <div className={`grid ${gameOverClass}`}>
         {this.renderButton(0)}
         {this.renderButton(1)}
         {this.renderResetButton()}
-        {Game.renderConfigButton()}
+        {this.renderConfigButton()}
       </div>
     );
   }
@@ -220,6 +242,7 @@ Game.propTypes = {
   soundEnabled: PropTypes.bool.isRequired,
   vibrationEnabled: PropTypes.bool.isRequired,
   bonusTime: PropTypes.number.isRequired,
+  minimumTime: PropTypes.number.isRequired,
 };
 
 export default Game;

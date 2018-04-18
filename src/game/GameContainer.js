@@ -6,6 +6,7 @@ const mapStateToProps = state => ({
   soundEnabled: state.soundEnabled,
   vibrationEnabled: state.vibrationEnabled,
   bonusTime: state.bonusTime,
+  minimumTime: state.minimumTime,
 });
 
 const mapDispatchToProps = {};

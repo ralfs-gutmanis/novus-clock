@@ -4,6 +4,7 @@ import {
   ENABLE_VIBRATION,
   SET_TIMER_MAX,
   SET_BONUS_TIME,
+  SET_MINIMUM_TIME,
 } from './ActionTypes';
 
 
@@ -28,6 +29,9 @@ function enableVibration(state = true, action) {
 function setTimerMax(state = 90, action) {
   switch (action.type) {
     case SET_TIMER_MAX:
+      if (action.seconds == null || action.seconds < 0) {
+        return 0;
+      }
       return action.seconds;
     default:
       return state;
@@ -37,6 +41,21 @@ function setTimerMax(state = 90, action) {
 function setBonusTime(state = 0, action) {
   switch (action.type) {
     case SET_BONUS_TIME:
+      if (action.seconds == null || action.seconds < 0) {
+        return 0;
+      }
+      return action.seconds;
+    default:
+      return state;
+  }
+}
+
+function setMinimumTime(state = 0, action) {
+  switch (action.type) {
+    case SET_MINIMUM_TIME:
+      if (action.seconds == null || action.seconds < 0) {
+        return 0;
+      }
       return action.seconds;
     default:
       return state;
@@ -48,6 +67,7 @@ const clockApp = combineReducers({
   soundEnabled: enableSound,
   timerMax: setTimerMax,
   bonusTime: setBonusTime,
+  minimumTime: setMinimumTime,
 });
 
 export default clockApp;
