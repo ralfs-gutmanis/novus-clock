@@ -62,7 +62,7 @@ class Config extends React.Component {
                 onChange={this.handleChange}
               />
             </label>
-            <label className="input-container" htmlFor="bonusTime">
+            <label className="input-container hidden" htmlFor="bonusTime">
               <span className="input-label">Bonus time</span>
               <input
                 type="number"

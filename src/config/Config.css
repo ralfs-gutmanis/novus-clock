@@ -67,3 +67,7 @@ h1 {
   background-color: #FF5722;
   text-decoration: none;
 }
+
+.hidden {
+  display: none !important;
+}

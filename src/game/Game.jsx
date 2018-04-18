@@ -1,16 +1,24 @@
 import React, { Component } from 'react';
 import update from 'immutability-helper';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { buttonPressBeep, countdownBeep, losingBeep } from './../beeper/Beeper';
+import { buttonPressVibrate } from './../vibrater/Vibrater';
 import Button from './../button/Button';
 import './../App.css';
 
-const maxTime = 90;
+const BEEP_LOSING = 'BEEP_LOSING';
+const BEEP_BUTTON_PRESS = 'BEEP_BUTTON_PRESS';
+const BEEP_COUNTDOWN = 'BEEP_COUNTDOWN';
+
 const initialState = {
   history: [{
-    players: [maxTime, maxTime],
+    players: [0, 0],
   }],
-  maxTime,
+  maxTime: 0,
+  soundEnabled: true,
+  vibrationEnabled: true,
+  bonusTime: 0,
   activePlayerIndex: 0,
   isGameStarted: false,
   isGameFinished: false,
@@ -25,27 +33,77 @@ class Game extends Component {
 
   constructor(props) {
     super(props);
-    this.state = initialState;
+    this.state = this.getEmptyState();
   }
 
-  resetGame(seconds) {
+  componentWillUnmount() {
+    this.resetGame();
+  }
+
+  getEmptyState() {
+    return Object.assign(
+      {},
+      initialState,
+      {
+        maxTime: this.props.timerMax,
+        soundEnabled: this.props.soundEnabled,
+        vibrationEnabled: this.props.vibrationEnabled,
+        bonusTime: this.props.bonusTime,
+        history: [{
+          players: [this.props.timerMax, this.props.timerMax],
+        }],
+      },
+    );
+  }
+
+  resetGame() {
     clearInterval(this.interval);
 
-    let newSeconds = seconds;
-    if (!newSeconds) {
-      newSeconds = 90;
-    }
-
-    this.setState({
-      maxTime: newSeconds,
-      history: [{
-        players: [maxTime, maxTime],
-      }],
-      isGameStarted: false,
-      isGameFinished: false,
-    });
+    this.setState(this.getEmptyState());
   }
 
+  feedback(type) {
+    this.soundFeedback(type);
+    this.vibrationFeedback(type);
+  }
+
+  vibrationFeedback(type) {
+    const vibrationEnabled = this.state.vibrationEnabled;
+
+    if (!vibrationEnabled) {
+      return;
+    }
+
+    switch (type) {
+      case BEEP_BUTTON_PRESS:
+        buttonPressVibrate();
+        break;
+      default:
+        break;
+    }
+  }
+
+  soundFeedback(type) {
+    const soundEnabled = this.state.soundEnabled;
+
+    if (!soundEnabled) {
+      return;
+    }
+
+    switch (type) {
+      case BEEP_BUTTON_PRESS:
+        buttonPressBeep();
+        break;
+      case BEEP_COUNTDOWN:
+        countdownBeep();
+        break;
+      case BEEP_LOSING:
+        losingBeep();
+        break;
+      default:
+        break;
+    }
+  }
 
   tick() {
     const { activePlayerIndex } = this.state;
@@ -54,11 +112,11 @@ class Game extends Component {
 
     let newTime = current[activePlayerIndex] - 1;
     if (newTime <= 0) {
-      losingBeep();
+      this.feedback(BEEP_LOSING);
       newTime = 0;
       this.stopGame();
     } else if (newTime < 10) {
-      countdownBeep();
+      this.feedback(BEEP_COUNTDOWN);
     }
 
     const newHistory = update(this.state.history, {
@@ -84,7 +142,7 @@ class Game extends Component {
     }
 
     if (!this.state.isGameStarted) {
-      buttonPressBeep();
+      this.feedback(BEEP_BUTTON_PRESS);
 
       this.interval = setInterval(this.tick.bind(this), 1000);
       this.setState({
@@ -99,7 +157,7 @@ class Game extends Component {
       const history = this.state.history.slice();
       const current = history[history.length - 1];
 
-      buttonPressBeep();
+      this.feedback(BEEP_BUTTON_PRESS);
 
       clearInterval(this.interval);
       this.interval = setInterval(this.tick.bind(this), 1000);
@@ -113,10 +171,6 @@ class Game extends Component {
   playerIsActive(playerNumber) {
     const { activePlayerIndex } = this.state;
     return activePlayerIndex === playerNumber;
-  }
-
-  handleChooseTime(seconds) {
-    this.resetGame(seconds);
   }
 
   renderButton(playerNumber) {
@@ -149,17 +203,6 @@ class Game extends Component {
     );
   }
 
-  renderChooseTimeButton(seconds) {
-    return (
-      <button
-        className="button--time"
-        onClick={() => this.handleChooseTime(seconds)}
-      >
-        {seconds}
-      </button>
-    );
-  }
-
   render() {
     return (
       <div className="grid">
@@ -171,5 +214,12 @@ class Game extends Component {
     );
   }
 }
+
+Game.propTypes = {
+  timerMax: PropTypes.number.isRequired,
+  soundEnabled: PropTypes.bool.isRequired,
+  vibrationEnabled: PropTypes.bool.isRequired,
+  bonusTime: PropTypes.number.isRequired,
+};
 
 export default Game;
