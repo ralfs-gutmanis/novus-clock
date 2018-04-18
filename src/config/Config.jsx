@@ -98,18 +98,20 @@ class Config extends React.Component {
                 <span className="slider round" />
               </label>
             </label>
-            <input
-              type="submit"
-              className="novus-button save"
-              value="SAVE"
-            />
-            <Link
-              className="novus-button cancel"
-              href="#home"
-              to="/"
-            >
-              GO BACK
-            </Link>
+            <div className="flex-vertical-center">
+              <input
+                type="submit"
+                className="novus-button save"
+                value="SAVE"
+              />
+              <Link
+                className="novus-button cancel"
+                href="#home"
+                to="/"
+              >
+                GO BACK
+              </Link>
+            </div>
           </form>
         </section>
       </div>
