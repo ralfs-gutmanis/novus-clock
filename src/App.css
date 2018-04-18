@@ -7,7 +7,7 @@
 }
 
 .grid-game-over {
-  grid-template-columns: [left] 2fr [a] 1fr [b] 2fr [right];
+  grid-template-columns: [left] 1fr [a] 1fr [b] 1fr [right];
 }
 
 .config {

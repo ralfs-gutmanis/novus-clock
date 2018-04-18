@@ -200,8 +200,7 @@ class Game extends Component {
         onClick={() => this.resetGame(this.state.maxTime)}
       >
         <span className="vertical">
-          RESET<br />
-          GAME
+          RESET
         </span>
       </button>
     );
