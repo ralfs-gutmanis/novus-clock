@@ -5,7 +5,7 @@ import {
   FEEDBACK_NAVIGATION,
 } from './FeedbackTypes';
 import { buttonPressBeep, countdownBeep, losingBeep } from './../beeper/Beeper';
-import { buttonPressVibrate } from './../vibrater/Vibrater';
+import { buttonPressVibrate, navigationVibrate } from './../vibrater/Vibrater';
 import store from './../index';
 
 function vibrationFeedback(type) {
@@ -17,8 +17,10 @@ function vibrationFeedback(type) {
 
   switch (type) {
     case BEEP_BUTTON_PRESS:
-    case FEEDBACK_NAVIGATION:
       buttonPressVibrate();
+      break;
+    case FEEDBACK_NAVIGATION:
+      navigationVibrate();
       break;
     default:
       break;
