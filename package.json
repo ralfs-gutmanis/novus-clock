@@ -1,6 +1,6 @@
 {
   "name": "novus-timer",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "private": true,
   "dependencies": {
     "gh-pages": "^1.1.0",
@@ -16,8 +16,8 @@
     "reset-css": "^3.0.0"
   },
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "npm version patch --force -m 'version bump'; gh-pages -d build",
+    "predeploy": "npm version patch --force -m 'version bump'; git push origin; npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
