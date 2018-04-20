@@ -185,9 +185,7 @@ class Game extends Component {
         className={`button--reset button--left ${gameOverClass}`}
         onClick={() => this.resetGame(this.state.maxTime)}
       >
-        <span className="vertical">
-          RESET
-        </span>
+        <span className="text-vertical-left">RESET</span>
       </button>
     );
   }
@@ -202,7 +200,7 @@ class Game extends Component {
         className={`button--reset button--right ${gameOverClass}`}
         to="/config"
       >
-        CONFIG
+        <span className="text-vertical-right">CONFIG</span>
       </Link>
     );
   }
