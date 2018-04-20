@@ -1,4 +1,4 @@
-const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 const EXP_REDUCE_SOUND = 'EXP_REDUCE_SOUND';
 
@@ -19,7 +19,8 @@ function genericBeep(
   volume,
   afterStartActions,
 ) {
-  const audioCtx = new AudioContext();
+  audioCtx.resume();
+
   const oscillator = audioCtx.createOscillator();
   const gainNode = audioCtx.createGain();
   const { currentTime } = audioCtx;
