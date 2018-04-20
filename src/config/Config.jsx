@@ -53,7 +53,10 @@ class Config extends React.Component {
     return (
       <div className="config-grid">
         <section className="config-main">
-          <h1>Settings</h1>
+          <div className="flex-vertical-center">
+            <h1>Settings</h1>
+            <span>version {process.env.REACT_APP_VERSION}</span>
+          </div>
           <form onSubmit={this.handleSubmit}>
             <label className="input-container" htmlFor="timerMax">
               <span className="input-label">Timer max</span>
