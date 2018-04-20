@@ -11,21 +11,6 @@ const BEEP_LOSING = 'BEEP_LOSING';
 const BEEP_BUTTON_PRESS = 'BEEP_BUTTON_PRESS';
 const BEEP_COUNTDOWN = 'BEEP_COUNTDOWN';
 
-const initialState = {
-  history: [{
-    players: [0, 0],
-  }],
-  activePlayerIndex: 0,
-  isGameStarted: false,
-  isGameFinished: false,
-  // Config
-  maxTime: 0,
-  soundEnabled: true,
-  vibrationEnabled: true,
-  bonusTime: 0,
-  minimumTime: 0,
-};
-
 class Game extends Component {
   constructor(props) {
     super(props);
@@ -39,23 +24,24 @@ class Game extends Component {
   getEmptyState() {
     return Object.assign(
       {},
-      initialState,
       {
-        maxTime: this.props.timerMax,
+        activePlayerIndex: 0,
+        isGameStarted: false,
+        isGameFinished: false,
+        history: [{
+          players: [this.props.timerMax, this.props.timerMax],
+        }],
+        maxTime: this.props.timerMax, // TODO delete??
         soundEnabled: this.props.soundEnabled,
         vibrationEnabled: this.props.vibrationEnabled,
         bonusTime: this.props.bonusTime,
         minimumTime: this.props.minimumTime,
-        history: [{
-          players: [this.props.timerMax, this.props.timerMax],
-        }],
       },
     );
   }
 
   resetGame() {
     clearInterval(this.interval);
-
     this.setState(this.getEmptyState());
   }
 
@@ -65,7 +51,7 @@ class Game extends Component {
   }
 
   vibrationFeedback(type) {
-    const vibrationEnabled = this.state.vibrationEnabled;
+    const { vibrationEnabled } = this.state;
 
     if (!vibrationEnabled) {
       return;
@@ -81,7 +67,7 @@ class Game extends Component {
   }
 
   soundFeedback(type) {
-    const soundEnabled = this.state.soundEnabled;
+    const { soundEnabled } = this.state;
 
     if (!soundEnabled) {
       return;
@@ -155,7 +141,7 @@ class Game extends Component {
       clearInterval(this.interval); // TODO refactor --> StopCounting()
       const history = this.state.history.slice();
       const current = history[history.length - 1];
-      const activePlayerIndex = this.state.activePlayerIndex;
+      const { activePlayerIndex } = this.state;
 
       if (current.players[activePlayerIndex] < this.props.minimumTime) {
         current.players[activePlayerIndex] = this.props.minimumTime;
@@ -191,7 +177,7 @@ class Game extends Component {
   }
 
   renderResetButton() {
-    const isGameFinished = this.state.isGameFinished;
+    const { isGameFinished } = this.state;
     const gameOverClass = isGameFinished ? 'button--game-over' : '';
 
     return (
@@ -207,7 +193,7 @@ class Game extends Component {
   }
 
   renderConfigButton() {
-    const isGameFinished = this.state.isGameFinished;
+    const { isGameFinished } = this.state;
     const gameOverClass = isGameFinished ? 'button--game-over' : '';
 
     return (
@@ -222,7 +208,7 @@ class Game extends Component {
   }
 
   render() {
-    const isGameFinished = this.state.isGameFinished;
+    const { isGameFinished } = this.state;
     const gameOverClass = isGameFinished ? 'grid-game-over' : '';
 
     return (
