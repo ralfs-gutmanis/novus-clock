@@ -7,7 +7,7 @@
 }
 
 .grid-game-over {
-  grid-template-columns: [left] 1fr [a] 1fr [b] 1fr [right];
+  grid-template-columns: [left] 100px [a] 1fr [b] 100px [right] !important;
 }
 
 .config {
@@ -81,7 +81,7 @@
 .button--game-over {
   grid-row-start: top;
   grid-row-end: bot;
-  font-size: 15vh;
-  background-color: rgb(255, 255, 255, 0.5);
+  font-size: 40px;
+  background-color: rgb(255, 255, 255, 0.75);
   border: 0;
 }
