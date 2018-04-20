@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import feedback from './../feedback/Feedback';
+import { FEEDBACK_NAVIGATION } from './../feedback/FeedbackTypes';
 import './Config.css';
 import './Switch.css';
 
@@ -119,11 +121,13 @@ class Config extends React.Component {
                 type="submit"
                 className="novus-button save"
                 value="SAVE"
+                onClick={() => feedback(FEEDBACK_NAVIGATION)}
               />
               <Link
                 className="novus-button cancel"
                 href="#home"
                 to="/"
+                onClick={() => feedback(FEEDBACK_NAVIGATION)}
               >
                 GO BACK
               </Link>

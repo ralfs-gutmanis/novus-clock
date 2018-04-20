@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import update from 'immutability-helper';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { buttonPressBeep, countdownBeep, losingBeep } from './../beeper/Beeper';
-import { buttonPressVibrate } from './../vibrater/Vibrater';
 import Button from './../button/Button';
+import {
+  BEEP_BUTTON_PRESS,
+  BEEP_COUNTDOWN,
+  BEEP_LOSING,
+  FEEDBACK_NAVIGATION,
+} from './../feedback/FeedbackTypes';
+import feedback from './../feedback/Feedback';
 import './../App.css';
 
-const BEEP_LOSING = 'BEEP_LOSING';
-const BEEP_BUTTON_PRESS = 'BEEP_BUTTON_PRESS';
-const BEEP_COUNTDOWN = 'BEEP_COUNTDOWN';
+const PLAYER_WHITE = 0;
+const PLAYER_BLACK = 1;
 
 class Game extends Component {
   constructor(props) {
@@ -25,15 +29,12 @@ class Game extends Component {
     return Object.assign(
       {},
       {
-        activePlayerIndex: 0,
+        activePlayerIndex: PLAYER_WHITE,
         isGameStarted: false,
         isGameFinished: false,
         history: [{
           players: [this.props.timerMax, this.props.timerMax],
         }],
-        maxTime: this.props.timerMax, // TODO delete??
-        soundEnabled: this.props.soundEnabled,
-        vibrationEnabled: this.props.vibrationEnabled,
         bonusTime: this.props.bonusTime,
         minimumTime: this.props.minimumTime,
       },
@@ -45,49 +46,6 @@ class Game extends Component {
     this.setState(this.getEmptyState());
   }
 
-  feedback(type) {
-    this.soundFeedback(type);
-    this.vibrationFeedback(type);
-  }
-
-  vibrationFeedback(type) {
-    const { vibrationEnabled } = this.state;
-
-    if (!vibrationEnabled) {
-      return;
-    }
-
-    switch (type) {
-      case BEEP_BUTTON_PRESS:
-        buttonPressVibrate();
-        break;
-      default:
-        break;
-    }
-  }
-
-  soundFeedback(type) {
-    const { soundEnabled } = this.state;
-
-    if (!soundEnabled) {
-      return;
-    }
-
-    switch (type) {
-      case BEEP_BUTTON_PRESS:
-        buttonPressBeep();
-        break;
-      case BEEP_COUNTDOWN:
-        countdownBeep();
-        break;
-      case BEEP_LOSING:
-        losingBeep();
-        break;
-      default:
-        break;
-    }
-  }
-
   tick() {
     const { activePlayerIndex } = this.state;
     const currentIndex = this.state.history.length - 1;
@@ -95,11 +53,11 @@ class Game extends Component {
 
     let newTime = current[activePlayerIndex] - 1;
     if (newTime <= 0) {
-      this.feedback(BEEP_LOSING);
+      feedback(BEEP_LOSING);
       newTime = 0;
       this.stopGame();
     } else if (newTime < 10) {
-      this.feedback(BEEP_COUNTDOWN);
+      feedback(BEEP_COUNTDOWN);
     }
 
     const newHistory = update(this.state.history, {
@@ -125,7 +83,7 @@ class Game extends Component {
     }
 
     if (!this.state.isGameStarted) {
-      this.feedback(BEEP_BUTTON_PRESS);
+      feedback(BEEP_BUTTON_PRESS);
 
       this.interval = setInterval(this.tick.bind(this), 1000);
       this.setState({
@@ -137,7 +95,7 @@ class Game extends Component {
     }
 
     if (this.playerIsActive(playerNumber)) {
-      this.feedback(BEEP_BUTTON_PRESS);
+      feedback(BEEP_BUTTON_PRESS);
       clearInterval(this.interval); // TODO refactor --> StopCounting()
       const history = this.state.history.slice();
       const current = history[history.length - 1];
@@ -170,7 +128,7 @@ class Game extends Component {
         isGameFinished={this.state.isGameFinished}
         isGameStarted={this.state.isGameStarted}
         onClick={() => this.clickButton(playerNumber)}
-        playerWhite={playerNumber === 0}
+        playerWhite={playerNumber === PLAYER_WHITE}
         myTurn={this.playerIsActive(playerNumber)}
       />
     );
@@ -183,7 +141,10 @@ class Game extends Component {
     return (
       <button
         className={`button--reset button--left ${gameOverClass}`}
-        onClick={() => this.resetGame(this.state.maxTime)}
+        onClick={() => {
+          feedback(FEEDBACK_NAVIGATION);
+          this.resetGame();
+        }}
       >
         <span className="text-vertical-left">RESET</span>
       </button>
@@ -199,6 +160,7 @@ class Game extends Component {
         href="#config"
         className={`button--reset button--right ${gameOverClass}`}
         to="/config"
+        onClick={() => feedback(FEEDBACK_NAVIGATION)}
       >
         <span className="text-vertical-right">CONFIG</span>
       </Link>
@@ -211,8 +173,8 @@ class Game extends Component {
 
     return (
       <div className={`grid ${gameOverClass}`}>
-        {this.renderButton(0)}
-        {this.renderButton(1)}
+        {this.renderButton(PLAYER_WHITE)}
+        {this.renderButton(PLAYER_BLACK)}
         {this.renderResetButton()}
         {this.renderConfigButton()}
       </div>
@@ -222,8 +184,6 @@ class Game extends Component {
 
 Game.propTypes = {
   timerMax: PropTypes.number.isRequired,
-  soundEnabled: PropTypes.bool.isRequired,
-  vibrationEnabled: PropTypes.bool.isRequired,
   bonusTime: PropTypes.number.isRequired,
   minimumTime: PropTypes.number.isRequired,
 };
