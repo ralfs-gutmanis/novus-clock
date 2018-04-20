@@ -16,6 +16,7 @@
     "reset-css": "^3.0.0"
   },
   "scripts": {
+    "predeploy": "npm run buld",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
