@@ -8,6 +8,9 @@ import {
   BEEP_COUNTDOWN,
   BEEP_LOSING,
   FEEDBACK_NAVIGATION,
+  SAY_ONE,
+  SAY_TWO,
+  SAY_THREE,
 } from './../feedback/FeedbackTypes';
 import feedback from './../feedback/Feedback';
 import './../App.css';
@@ -56,6 +59,12 @@ class Game extends Component {
       feedback(BEEP_LOSING);
       newTime = 0;
       this.stopGame();
+    } else if (newTime === 1) {
+      feedback(SAY_ONE);
+    } else if (newTime === 2) {
+      feedback(SAY_TWO);
+    } else if (newTime === 3) {
+      feedback(SAY_THREE);
     } else if (newTime < 10) {
       feedback(BEEP_COUNTDOWN);
     }

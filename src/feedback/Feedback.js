@@ -3,8 +3,18 @@ import {
   BEEP_COUNTDOWN,
   BEEP_LOSING,
   FEEDBACK_NAVIGATION,
+  SAY_ONE,
+  SAY_TWO,
+  SAY_THREE,
 } from './FeedbackTypes';
-import { buttonPressBeep, countdownBeep, losingBeep } from './../beeper/Beeper';
+import {
+  buttonPressBeep,
+  countdownBeep,
+  losingBeep,
+  playOne,
+  playTwo,
+  playThree,
+} from './../beeper/Beeper';
 import { buttonPressVibrate, navigationVibrate } from './../vibrater/Vibrater';
 import store from './../index';
 
@@ -43,6 +53,15 @@ function soundFeedback(type) {
       break;
     case BEEP_LOSING:
       losingBeep();
+      break;
+    case SAY_ONE:
+      playOne();
+      break;
+    case SAY_TWO:
+      playTwo();
+      break;
+    case SAY_THREE:
+      playThree();
       break;
     default:
       break;

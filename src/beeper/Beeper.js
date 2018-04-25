@@ -1,3 +1,8 @@
+import ogg1 from './../resources/one.ogg';
+import ogg2 from './../resources/two.ogg';
+import ogg3 from './../resources/three.ogg';
+import NovusBuffer from './Buffer';
+
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 const EXP_REDUCE_SOUND = 'EXP_REDUCE_SOUND';
@@ -72,4 +77,33 @@ function losingBeep() {
   genericBeep(length, frequency, volume, []);
 }
 
-export { buttonPressBeep, countdownBeep, losingBeep };
+const buffer = new NovusBuffer(audioCtx, [ogg1, ogg2, ogg3]);
+buffer.loadAll();
+
+function playBuffer(index) {
+  const source = audioCtx.createBufferSource();
+  source.buffer = buffer.getSoundByIndex(index);
+  source.connect(audioCtx.destination);
+  source.start();
+}
+
+function playOne() {
+  playBuffer(0);
+}
+
+function playTwo() {
+  playBuffer(1);
+}
+
+function playThree() {
+  playBuffer(2);
+}
+
+export {
+  buttonPressBeep,
+  countdownBeep,
+  losingBeep,
+  playOne,
+  playTwo,
+  playThree,
+};
