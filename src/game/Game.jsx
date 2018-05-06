@@ -39,6 +39,7 @@ class Game extends Component {
     const { activePlayerIndex } = this.props;
     const currentIndex = this.props.history.length - 1;
     const current = this.props.history[currentIndex].players.slice();
+    const oldTime = current[activePlayerIndex];
 
     let newTime = current[activePlayerIndex] - (this.state.timeIncrement / 1000);
 
@@ -46,14 +47,14 @@ class Game extends Component {
       feedback(BEEP_LOSING);
       newTime = 0;
       this.stopGame();
-    } else if (newTime % 1 < 0.001) {
-      if (Math.trunc(newTime) === 1) {
+    } else if (Math.trunc(oldTime) - Math.trunc(newTime) === 1) {
+      if (Math.trunc(oldTime) === 1) {
         feedback(SAY_ONE);
-      } else if (Math.trunc(newTime) === 2) {
+      } else if (Math.trunc(oldTime) === 2) {
         feedback(SAY_TWO);
-      } else if (Math.trunc(newTime) === 3) {
+      } else if (Math.trunc(oldTime) === 3) {
         feedback(SAY_THREE);
-      } else if (newTime < 10) {
+      } else if (newTime <= 10) {
         feedback(BEEP_COUNTDOWN);
       }
     }
