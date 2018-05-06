@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import update from 'immutability-helper';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Button from './../button/Button';
@@ -14,128 +13,105 @@ import {
 } from './../feedback/FeedbackTypes';
 import feedback from './../feedback/Feedback';
 import './../App.css';
-
-const PLAYER_WHITE = 0;
-const PLAYER_BLACK = 1;
+import { PLAYER_WHITE, PLAYER_BLACK } from './Constants';
 
 class Game extends Component {
   constructor(props) {
     super(props);
-    this.state = this.getEmptyState();
+
+    this.state = {
+      timeIncrement: 100,
+    };
+
+    this.resetGame();
   }
 
   componentWillUnmount() {
     this.resetGame();
   }
 
-  getEmptyState() {
-    return Object.assign(
-      {},
-      {
-        activePlayerIndex: PLAYER_WHITE,
-        isGameStarted: false,
-        isGameFinished: false,
-        history: [{
-          players: [this.props.timerMax, this.props.timerMax],
-        }],
-        bonusTime: this.props.bonusTime,
-        minimumTime: this.props.minimumTime,
-      },
-    );
-  }
-
   resetGame() {
     clearInterval(this.interval);
-    this.setState(this.getEmptyState());
+    this.props.resetGame(this.props.timerMax);
   }
 
   tick() {
-    const { activePlayerIndex } = this.state;
-    const currentIndex = this.state.history.length - 1;
-    const current = this.state.history[currentIndex].players.slice();
+    const { activePlayerIndex } = this.props;
+    const currentIndex = this.props.history.length - 1;
+    const current = this.props.history[currentIndex].players.slice();
 
-    let newTime = current[activePlayerIndex] - 1;
+    let newTime = current[activePlayerIndex] - (this.state.timeIncrement / 1000);
+
     if (newTime <= 0) {
       feedback(BEEP_LOSING);
       newTime = 0;
       this.stopGame();
-    } else if (newTime === 1) {
-      feedback(SAY_ONE);
-    } else if (newTime === 2) {
-      feedback(SAY_TWO);
-    } else if (newTime === 3) {
-      feedback(SAY_THREE);
-    } else if (newTime < 10) {
-      feedback(BEEP_COUNTDOWN);
+    } else if (newTime % 1 < 0.001) {
+      if (Math.trunc(newTime) === 1) {
+        feedback(SAY_ONE);
+      } else if (Math.trunc(newTime) === 2) {
+        feedback(SAY_TWO);
+      } else if (Math.trunc(newTime) === 3) {
+        feedback(SAY_THREE);
+      } else if (newTime < 10) {
+        feedback(BEEP_COUNTDOWN);
+      }
     }
 
-    const newHistory = update(this.state.history, {
-      [currentIndex]: { players: { [activePlayerIndex]: { $set: newTime } } },
-    });
-
-    this.setState({
-      history: newHistory,
-    });
+    this.props.tickTime(activePlayerIndex, newTime);
   }
 
   stopGame() {
     clearInterval(this.interval);
-
-    this.setState({
-      isGameFinished: true,
-    });
+    this.props.stopGame();
   }
 
   clickButton(playerNumber) {
-    if (this.state.isGameFinished) {
+    if (this.props.isGameFinished) {
       return;
     }
 
-    if (!this.state.isGameStarted) {
+    if (!this.props.isGameStarted) {
       feedback(BEEP_BUTTON_PRESS);
 
-      this.interval = setInterval(this.tick.bind(this), 1000);
-      this.setState({
-        isGameStarted: true,
-        activePlayerIndex: playerNumber,
-      });
-
+      this.interval = setInterval(this.tick.bind(this), this.state.timeIncrement);
+      this.props.startGame();
       return;
     }
 
     if (this.playerIsActive(playerNumber)) {
       feedback(BEEP_BUTTON_PRESS);
       clearInterval(this.interval); // TODO refactor --> StopCounting()
-      const history = this.state.history.slice();
+      const history = this.props.history.slice();
       const current = history[history.length - 1];
-      const { activePlayerIndex } = this.state;
+      const { activePlayerIndex } = this.props;
+      const activePlayerTime = current.players[activePlayerIndex];
 
-      if (current.players[activePlayerIndex] < this.props.minimumTime) {
-        current.players[activePlayerIndex] = this.props.minimumTime;
-      }
+      // TODO refactor --> StartCounting()
+      this.interval = setInterval(this.tick.bind(this), this.state.timeIncrement);
 
-      this.interval = setInterval(this.tick.bind(this), 1000); // TODO refactor --> StartCounting()
-      this.setState({
-        activePlayerIndex: (this.state.activePlayerIndex + 1) % 2,
-        history: history.concat(current),
-      });
+      this.props.changePlayer(
+        activePlayerIndex,
+        activePlayerTime,
+        this.props.minimumTime,
+      );
     }
   }
 
   playerIsActive(playerNumber) {
-    const { activePlayerIndex } = this.state;
+    const { activePlayerIndex } = this.props;
     return activePlayerIndex === playerNumber;
   }
 
   renderButton(playerNumber) {
-    const history = this.state.history.slice();
+    const history = this.props.history.slice();
     const current = history[history.length - 1];
 
     return (
       <Button
         value={current.players[playerNumber]}
-        isGameFinished={this.state.isGameFinished}
-        isGameStarted={this.state.isGameStarted}
+        isGameFinished={this.props.isGameFinished}
+        isGameStarted={this.props.isGameStarted}
         onClick={() => this.clickButton(playerNumber)}
         playerWhite={playerNumber === PLAYER_WHITE}
         myTurn={this.playerIsActive(playerNumber)}
@@ -144,7 +120,7 @@ class Game extends Component {
   }
 
   renderResetButton() {
-    const { isGameFinished } = this.state;
+    const { isGameFinished } = this.props;
     const gameOverClass = isGameFinished ? 'button--game-over' : '';
 
     return (
@@ -161,7 +137,7 @@ class Game extends Component {
   }
 
   renderConfigButton() {
-    const { isGameFinished } = this.state;
+    const { isGameFinished } = this.props;
     const gameOverClass = isGameFinished ? 'button--game-over' : '';
 
     return (
@@ -177,7 +153,7 @@ class Game extends Component {
   }
 
   render() {
-    const { isGameFinished } = this.state;
+    const { isGameFinished } = this.props;
     const gameOverClass = isGameFinished ? 'grid-game-over' : '';
 
     return (
@@ -192,9 +168,25 @@ class Game extends Component {
 }
 
 Game.propTypes = {
+  // Config
   timerMax: PropTypes.number.isRequired,
   bonusTime: PropTypes.number.isRequired,
   minimumTime: PropTypes.number.isRequired,
+
+  // State
+  activePlayerIndex: PropTypes.number.isRequired,
+  isGameFinished: PropTypes.bool.isRequired,
+  isGameStarted: PropTypes.bool.isRequired,
+  history: PropTypes.arrayOf(PropTypes.shape({
+    players: PropTypes.arrayOf(PropTypes.number),
+  })).isRequired,
+
+  // Actions
+  changePlayer: PropTypes.func.isRequired,
+  tickTime: PropTypes.func.isRequired,
+  resetGame: PropTypes.func.isRequired,
+  startGame: PropTypes.func.isRequired,
+  stopGame: PropTypes.func.isRequired,
 };
 
 export default Game;

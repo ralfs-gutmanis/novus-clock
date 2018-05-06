@@ -65,7 +65,7 @@ class Button extends Component {
       return false;
     }
 
-    return this.props.myTurn && this.props.value % 2 === 1;
+    return this.props.myTurn && Math.trunc(this.props.value) % 2 === 1;
   }
 
   isDisabled() {
@@ -88,6 +88,17 @@ class Button extends Component {
     return '';
   }
 
+  value() {
+    if (this.props.value >= 10) {
+      return Math.trunc(this.props.value);
+    }
+
+    return this.props.value.toLocaleString(
+      undefined,
+      { minimumFractionDigits: 2, maximumFractionDigits: 2 },
+    );
+  }
+
   render() {
     return (
       <button
@@ -97,7 +108,7 @@ class Button extends Component {
         onKeyPress={() => this.handleClick()}
         disabled={this.isDisabled()}
       >
-        {this.props.value}
+        { this.value() }
       </button>
     );
   }

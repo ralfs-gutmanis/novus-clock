@@ -1,4 +1,3 @@
-import { combineReducers } from 'redux';
 import {
   ENABLE_SOUND,
   ENABLE_VIBRATION,
@@ -8,7 +7,7 @@ import {
 } from './ActionTypes';
 
 
-function enableSound(state = true, action) {
+export function enableSound(state = true, action) {
   switch (action.type) {
     case ENABLE_SOUND:
       return action.enabled;
@@ -17,7 +16,7 @@ function enableSound(state = true, action) {
   }
 }
 
-function enableVibration(state = true, action) {
+export function enableVibration(state = true, action) {
   switch (action.type) {
     case ENABLE_VIBRATION:
       return action.enabled;
@@ -26,7 +25,7 @@ function enableVibration(state = true, action) {
   }
 }
 
-function setTimerMax(state = 90, action) {
+export function setTimerMax(state = 90, action) {
   switch (action.type) {
     case SET_TIMER_MAX:
       if (action.seconds == null || action.seconds < 0) {
@@ -38,7 +37,7 @@ function setTimerMax(state = 90, action) {
   }
 }
 
-function setBonusTime(state = 0, action) {
+export function setBonusTime(state = 0, action) {
   switch (action.type) {
     case SET_BONUS_TIME:
       if (action.seconds == null || action.seconds < 0) {
@@ -50,7 +49,7 @@ function setBonusTime(state = 0, action) {
   }
 }
 
-function setMinimumTime(state = 0, action) {
+export function setMinimumTime(state = 0, action) {
   switch (action.type) {
     case SET_MINIMUM_TIME:
       if (action.seconds == null || action.seconds < 0) {
@@ -61,13 +60,3 @@ function setMinimumTime(state = 0, action) {
       return state;
   }
 }
-
-const clockApp = combineReducers({
-  vibrationEnabled: enableVibration,
-  soundEnabled: enableSound,
-  timerMax: setTimerMax,
-  bonusTime: setBonusTime,
-  minimumTime: setMinimumTime,
-});
-
-export default clockApp;
