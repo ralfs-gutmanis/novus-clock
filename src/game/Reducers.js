@@ -14,6 +14,8 @@ export function updateCurrentPlayer(state = PLAYER_WHITE, action) {
       return state;
     case Actions.RESET_GAME:
       return PLAYER_WHITE;
+    case Actions.START_GAME:
+      return action.currentPlayerIndex;
     default:
       return state;
   }

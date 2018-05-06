@@ -19,8 +19,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(Actions.tickTime(currentPlayerIndex, newTime)),
   resetGame: timerMax =>
     dispatch(Actions.resetGame(timerMax)),
-  startGame: () =>
-    dispatch(Actions.startGame()),
+  startGame: currentPlayerIndex =>
+    dispatch(Actions.startGame(currentPlayerIndex)),
   stopGame: () =>
     dispatch(Actions.stopGame()),
 });

@@ -37,9 +37,10 @@ export function resetGame(maxTime = x`maxTime`) {
   };
 }
 
-export function startGame() {
+export function startGame(currentPlayerIndex = x`currentPlayerIndex`) {
   return {
     type: START_GAME,
+    currentPlayerIndex,
   };
 }
 

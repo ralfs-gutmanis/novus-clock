@@ -75,7 +75,7 @@ class Game extends Component {
       feedback(BEEP_BUTTON_PRESS);
 
       this.interval = setInterval(this.tick.bind(this), this.state.timeIncrement);
-      this.props.startGame();
+      this.props.startGame(playerNumber);
       return;
     }
 
