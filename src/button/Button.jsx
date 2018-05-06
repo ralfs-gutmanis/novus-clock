@@ -95,7 +95,7 @@ class Button extends Component {
 
     return this.props.value.toLocaleString(
       undefined,
-      { minimumFractionDigits: 2, maximumFractionDigits: 2 },
+      { minimumFractionDigits: 1, maximumFractionDigits: 1 },
     );
   }
 

@@ -170,7 +170,6 @@ class Game extends Component {
 Game.propTypes = {
   // Config
   timerMax: PropTypes.number.isRequired,
-  bonusTime: PropTypes.number.isRequired,
   minimumTime: PropTypes.number.isRequired,
 
   // State

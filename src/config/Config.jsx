@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import feedback from './../feedback/Feedback';
@@ -49,6 +50,7 @@ class Config extends React.Component {
     this.props.enableVibration(this.state.vibrationEnabled);
     this.props.setBonusTime(this.state.bonusTime);
     this.props.setMinimumTime(this.state.minimumTime);
+    this.props.history.push('/');
   }
 
   render() {
@@ -150,6 +152,7 @@ Config.propTypes = {
   enableSound: PropTypes.func.isRequired,
   enableVibration: PropTypes.func.isRequired,
   setMinimumTime: PropTypes.func.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
 };
 
 export default Config;
