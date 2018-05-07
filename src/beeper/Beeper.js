@@ -4,6 +4,11 @@ import ogg3 from './../resources/three.ogg';
 import NovusBuffer from './Buffer';
 
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const compressor = audioCtx.createDynamicsCompressor();
+compressor.connect(audioCtx.destination);
+
+const buffer = new NovusBuffer(audioCtx, [ogg1, ogg2, ogg3]);
+buffer.loadAll();
 
 const EXP_REDUCE_SOUND = 'EXP_REDUCE_SOUND';
 
@@ -31,7 +36,7 @@ function genericBeep(
   const { currentTime } = audioCtx;
 
   oscillator.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
+  gainNode.connect(compressor);
 
   gainNode.gain.setValueAtTime(volume, currentTime);
   oscillator.frequency.setValueAtTime(frequency, currentTime);
@@ -77,13 +82,10 @@ function losingBeep() {
   genericBeep(length, frequency, volume, []);
 }
 
-const buffer = new NovusBuffer(audioCtx, [ogg1, ogg2, ogg3]);
-buffer.loadAll();
-
 function playBuffer(index) {
   const source = audioCtx.createBufferSource();
   source.buffer = buffer.getSoundByIndex(index);
-  source.connect(audioCtx.destination);
+  source.connect(compressor);
   source.start();
 }
 
