@@ -7,12 +7,8 @@ export function updateCurrentPlayer(state = PLAYER_WHITE, action) {
     case Actions.CHANGE_PLAYER:
       if (state === PLAYER_WHITE) {
         return PLAYER_BLACK;
-      } else if (state === PLAYER_BLACK) {
-        return PLAYER_WHITE;
       }
 
-      return state;
-    case Actions.RESET_GAME:
       return PLAYER_WHITE;
     case Actions.START_GAME:
       return action.currentPlayerIndex;
