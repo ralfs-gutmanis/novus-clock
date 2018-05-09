@@ -2,9 +2,11 @@ import {
   ENABLE_SOUND,
   ENABLE_VIBRATION,
   SET_TIMER_MAX,
-  SET_BONUS_TIME,
-  SET_MINIMUM_TIME,
+  SET_SUDDEN_DEATH,
+  SET_COMPENSATION,
+  SET_OVERTIME,
 } from './ActionTypes';
+import { BonusTimeType } from './Constants';
 
 
 export function enableSound(state = true, action) {
@@ -37,24 +39,31 @@ export function setTimerMax(state = 90, action) {
   }
 }
 
-export function setBonusTime(state = 0, action) {
+export function setBonusTimeType(state = BonusTimeType.SuddenDeath, action) {
   switch (action.type) {
-    case SET_BONUS_TIME:
-      if (action.seconds == null || action.seconds < 0) {
-        return 0;
-      }
+    case SET_SUDDEN_DEATH:
+      return BonusTimeType.SuddenDeath;
+    case SET_COMPENSATION:
+      return BonusTimeType.Compensation;
+    case SET_OVERTIME:
+      return BonusTimeType.Overtime;
+    default:
+      return state;
+  }
+}
+
+export function setCompensationTime(state = 4, action) {
+  switch (action.type) {
+    case SET_COMPENSATION:
       return action.seconds;
     default:
       return state;
   }
 }
 
-export function setMinimumTime(state = 0, action) {
+export function setOvertimeTime(state = 7, action) {
   switch (action.type) {
-    case SET_MINIMUM_TIME:
-      if (action.seconds == null || action.seconds < 0) {
-        return 0;
-      }
+    case SET_OVERTIME:
       return action.seconds;
     default:
       return state;

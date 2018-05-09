@@ -94,7 +94,9 @@ class Game extends Component {
       this.props.changePlayer(
         activePlayerIndex,
         activePlayerTime,
-        this.props.minimumTime,
+        this.props.bonusTimeType,
+        this.props.compensationTime,
+        this.props.overtimeTime,
       );
     }
   }
@@ -171,7 +173,9 @@ class Game extends Component {
 Game.propTypes = {
   // Config
   timerMax: PropTypes.number.isRequired,
-  minimumTime: PropTypes.number.isRequired,
+  bonusTimeType: PropTypes.string.isRequired,
+  compensationTime: PropTypes.number.isRequired,
+  overtimeTime: PropTypes.number.isRequired,
 
   // State
   activePlayerIndex: PropTypes.number.isRequired,

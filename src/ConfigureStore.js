@@ -5,8 +5,9 @@ import {
   enableVibration,
   enableSound,
   setTimerMax,
-  setBonusTime,
-  setMinimumTime,
+  setBonusTimeType,
+  setCompensationTime,
+  setOvertimeTime,
 } from './config/Reducers';
 import {
   updateCurrentPlayer,
@@ -19,12 +20,13 @@ const allReducers = combineReducers({
   vibrationEnabled: enableVibration,
   soundEnabled: enableSound,
   timerMax: setTimerMax,
-  bonusTime: setBonusTime,
-  minimumTime: setMinimumTime,
   activePlayerIndex: updateCurrentPlayer,
   history: updateHistory,
   isGameStarted,
   isGameFinished,
+  bonusTimeType: setBonusTimeType,
+  compensationTime: setCompensationTime,
+  overtimeTime: setOvertimeTime,
 });
 
 const persistConfig = {

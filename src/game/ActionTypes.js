@@ -9,13 +9,17 @@ const x = (p) => { throw new Error(`Missing parameter: ${p}`); };
 export function changePlayer(
   currentPlayerIndex = x`currentPlayerIndex`,
   newTime = x`newTime`,
-  bonusTime = x`bonusTime`,
+  bonusTimeType = x`bonusTimeType`,
+  compensationTime = x`compensationTime`,
+  overtimeTime = x`overtimeTime`,
 ) {
   return {
     type: CHANGE_PLAYER,
     currentPlayerIndex,
     newTime,
-    bonusTime,
+    bonusTimeType,
+    compensationTime,
+    overtimeTime,
   };
 }
 

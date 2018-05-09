@@ -1,6 +1,7 @@
 import update from 'immutability-helper';
 import * as Actions from './ActionTypes';
 import { PLAYER_WHITE, PLAYER_BLACK } from './Constants';
+import { BonusTimeType } from '../config/Constants';
 
 export function updateCurrentPlayer(state = PLAYER_WHITE, action) {
   switch (action.type) {
@@ -25,18 +26,34 @@ export function updateHistory(state = [{ players: [90, 90] }], action) {
       return update(state, {
         [currentIndex]: { players: { [action.currentPlayerIndex]: { $set: action.newTime } } },
       });
+    case Actions.START_GAME: {
+      const newEntry = Object.assign({}, {
+        players: state[currentIndex].players.slice(),
+      });
+
+      return state.concat(newEntry);
+    }
     case Actions.CHANGE_PLAYER: {
       const newEntry = Object.assign({}, {
         players: state[currentIndex].players.slice(),
       });
       let { newTime } = action;
-      if (newTime < action.bonusTime) {
-        newTime = action.bonusTime;
+      const oldTime = state[currentIndex - 1].players[action.currentPlayerIndex];
+
+      if (action.bonusTimeType === BonusTimeType.Overtime && // TODO why not change
+        newTime < action.overtimeTime
+      ) {
+        newTime = action.overtimeTime;
+      }
+
+      if (action.bonusTimeType === BonusTimeType.Compensation) {
+        newTime = Math.min(oldTime, newTime + action.compensationTime);
       }
 
       newEntry.players[action.currentPlayerIndex] = newTime;
-
-      return state.concat(newEntry);
+      return update(state, {
+        [currentIndex]: { players: { [action.currentPlayerIndex]: { $set: action.newTime } } },
+      }).concat(newEntry);
     }
     case Actions.RESET_GAME:
       return [{ players: [action.maxTime, action.maxTime] }];

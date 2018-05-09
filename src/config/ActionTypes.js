@@ -1,8 +1,9 @@
 export const SET_TIMER_MAX = 'SET_TIMER_MAX';
 export const ENABLE_SOUND = 'ENABLE_SOUND';
 export const ENABLE_VIBRATION = 'ENABLE_VIBRATION';
-export const SET_BONUS_TIME = 'SET_BONUS_TIME';
-export const SET_MINIMUM_TIME = 'SET_MINIMUM_TIME';
+export const SET_SUDDEN_DEATH = 'SET_SUDDEN_DEATH';
+export const SET_COMPENSATION = 'SET_COMPENSATION';
+export const SET_OVERTIME = 'SET_OVERTIME';
 
 export function setTimerMax(seconds) {
   return {
@@ -25,16 +26,22 @@ export function enableVibration(enabled) {
   };
 }
 
-export function setBonusTime(seconds) {
+export function setSuddenDeath() {
   return {
-    type: SET_BONUS_TIME,
+    type: SET_SUDDEN_DEATH,
+  };
+}
+
+export function setCompensation(seconds) {
+  return {
+    type: SET_COMPENSATION,
     seconds,
   };
 }
 
-export function setMinimumTime(seconds) {
+export function setOvertime(seconds) {
   return {
-    type: SET_MINIMUM_TIME,
+    type: SET_OVERTIME,
     seconds,
   };
 }

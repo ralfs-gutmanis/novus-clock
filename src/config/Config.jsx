@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import feedback from './../feedback/Feedback';
 import { FEEDBACK_NAVIGATION } from './../feedback/FeedbackTypes';
+import { BonusTimeType } from './Constants';
+import RadioGroup from './radiogroup/RadioGroup';
+import NumberInput from './numberinput/NumberInput';
 import './Config.css';
 import './Switch.css';
 
@@ -25,8 +28,9 @@ class Config extends React.Component {
       timerMax: props.timerMax,
       soundEnabled: props.soundEnabled,
       vibrationEnabled: props.vibrationEnabled,
-      bonusTime: props.bonusTime,
-      minimumTime: props.minimumTime,
+      bonusTimeType: props.bonusTimeType,
+      compensationTime: props.compensationTime,
+      overtimeTime: props.overtimeTime,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -48,8 +52,15 @@ class Config extends React.Component {
     this.props.setTimerMax(this.state.timerMax);
     this.props.enableSound(this.state.soundEnabled);
     this.props.enableVibration(this.state.vibrationEnabled);
-    this.props.setBonusTime(this.state.bonusTime);
-    this.props.setMinimumTime(this.state.minimumTime);
+
+    if (this.state.bonusTimeType === BonusTimeType.SuddenDeath) {
+      this.props.setSuddenDeath();
+    } else if (this.state.bonusTimeType === BonusTimeType.Overtime) {
+      this.props.setOvertime(this.state.overtimeTime);
+    } else if (this.state.bonusTimeType === BonusTimeType.Compensation) {
+      this.props.setCompensation(this.state.compensationTime);
+    }
+
     this.props.history.push('/');
   }
 
@@ -57,41 +68,50 @@ class Config extends React.Component {
     return (
       <div className="config-grid">
         <section className="config-main">
-          <div className="flex-vertical-center">
-            <h1>Settings</h1>
-            <span>version {process.env.REACT_APP_VERSION}</span>
+          <div>
+            <div className="flex-vertical-center">
+              <h1>Settings</h1>
+              <span>version {process.env.REACT_APP_VERSION}</span>
+            </div>
           </div>
+
           <form onSubmit={this.handleSubmit}>
-            <label className="input-container" htmlFor="timerMax">
-              <span className="input-label">Timer max</span>
-              <input
-                type="number"
-                pattern="[0-9]*"
-                name="timerMax"
-                value={`${this.state.timerMax}`}
-                onChange={this.handleChange}
-              />
-            </label>
-            <label className="input-container" htmlFor="minimumTime">
-              <span className="input-label">Minimum time per move</span>
-              <input
-                type="number"
-                pattern="[0-9]*"
-                name="minimumTime"
-                value={`${this.state.minimumTime}`}
-                onChange={this.handleChange}
-              />
-            </label>
-            <label className="input-container hidden" htmlFor="bonusTime">
-              <span className="input-label">Bonus time</span>
-              <input
-                type="number"
-                pattern="[0-9]*"
-                name="bonusTime"
-                value={`${this.state.bonusTime}`}
-                onChange={this.handleChange}
-              />
-            </label>
+            <NumberInput
+              name="timerMax"
+              label="Base time"
+              value={this.state.timerMax}
+              handleChange={this.handleChange}
+            />
+
+            <h3 className="input-label">Bonus Time Type</h3>
+            <RadioGroup
+              values={[
+                BonusTimeType.SuddenDeath,
+                BonusTimeType.Overtime,
+                BonusTimeType.Compensation,
+              ]}
+              name="bonusTimeType"
+              selected={this.state.bonusTimeType}
+              handleChange={this.handleChange}
+            />
+
+            <NumberInput
+              name="overtimeTime"
+              label="Overtime seconds"
+              value={`${this.state.overtimeTime}`}
+              visible={this.state.bonusTimeType === BonusTimeType.Overtime}
+              handleChange={this.handleChange}
+            />
+
+            <NumberInput
+              name="compensationTime"
+              label="Compensation seconds"
+              value={`${this.state.compensationTime}`}
+              visible={this.state.bonusTimeType === BonusTimeType.Compensation}
+              handleChange={this.handleChange}
+            />
+
+            <h3 className="input-label">Feedback</h3>
             <label className="input-container flex-vertical-center" htmlFor="soundEnabled">
               <span className="checkbox-label">Sound Enabled</span>
               <label className="switch" htmlFor="soundEnabled">
@@ -142,16 +162,23 @@ class Config extends React.Component {
 }
 
 Config.propTypes = {
+  // Config
   timerMax: PropTypes.number.isRequired,
   soundEnabled: PropTypes.bool.isRequired,
   vibrationEnabled: PropTypes.bool.isRequired,
-  bonusTime: PropTypes.number.isRequired,
-  minimumTime: PropTypes.number.isRequired,
+  bonusTimeType: PropTypes.string.isRequired,
+  compensationTime: PropTypes.number.isRequired,
+  overtimeTime: PropTypes.number.isRequired,
+
+  // Actions
   setTimerMax: PropTypes.func.isRequired,
-  setBonusTime: PropTypes.func.isRequired,
   enableSound: PropTypes.func.isRequired,
   enableVibration: PropTypes.func.isRequired,
-  setMinimumTime: PropTypes.func.isRequired,
+  setSuddenDeath: PropTypes.func.isRequired,
+  setCompensation: PropTypes.func.isRequired,
+  setOvertime: PropTypes.func.isRequired,
+
+  // Route
   history: ReactRouterPropTypes.history.isRequired,
 };
 
