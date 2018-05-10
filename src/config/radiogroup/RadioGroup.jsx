@@ -9,7 +9,6 @@ class RadioGroup extends React.Component {
     this.state = {
       values: props.values,
       name: props.name,
-      // labels: props.labels,
     };
   }
 

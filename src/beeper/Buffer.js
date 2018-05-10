@@ -28,8 +28,7 @@ export default class NovusBuffer {
   }
 
   loaded() {
-    console.info('Audio files loaded');
-    console.debug(this.buffer);
+    // Audio files loaded
   }
 
   getSoundByIndex(index) {

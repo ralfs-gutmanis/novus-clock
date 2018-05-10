@@ -52,12 +52,13 @@
   background-color: white;
   color: black;
   z-index: 100;
-  /* writing-mode: vertical-lr; */
   font-size: 1rem;
   border: 5px solid black;
   user-select: none;
   cursor: pointer;
   text-decoration: none;
+  margin: 0; /* iOS fix */
+  padding: 0; /* iOS fix */
 }
 
 .button--left {

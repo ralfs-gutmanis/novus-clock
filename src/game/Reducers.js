@@ -40,7 +40,7 @@ export function updateHistory(state = [{ players: [90, 90] }], action) {
       let { newTime } = action;
       const oldTime = state[currentIndex - 1].players[action.currentPlayerIndex];
 
-      if (action.bonusTimeType === BonusTimeType.Overtime && // TODO why not change
+      if (action.bonusTimeType === BonusTimeType.Overtime &&
         newTime < action.overtimeTime
       ) {
         newTime = action.overtimeTime;
