@@ -1,8 +1,13 @@
 {
-  "main.css": "static/css/main.a41e8442.css",
-  "main.css.map": "static/css/main.a41e8442.css.map",
-  "main.js": "static/js/main.2fc127a8.js",
-  "main.js.map": "static/js/main.2fc127a8.js.map",
+  "main.css": "static/css/main.d03a799d.css",
+  "main.css.map": "static/css/main.d03a799d.css.map",
+  "main.js": "static/js/main.41def134.js",
+  "main.js.map": "static/js/main.41def134.js.map",
+  "static/media/game-over-1.ogg": "static/media/game-over-1.695c17e3.ogg",
+  "static/media/game-over-2.ogg": "static/media/game-over-2.a496a1df.ogg",
+  "static/media/game-over-3.ogg": "static/media/game-over-3.260bcb8b.ogg",
+  "static/media/game-over-4.ogg": "static/media/game-over-4.0068c266.ogg",
+  "static/media/game-over-5.ogg": "static/media/game-over-5.01619a48.ogg",
   "static/media/one.ogg": "static/media/one.aac1a705.ogg",
   "static/media/three.ogg": "static/media/three.8efc513c.ogg",
   "static/media/two.ogg": "static/media/two.fd26f022.ogg"
