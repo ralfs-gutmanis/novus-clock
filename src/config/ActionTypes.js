@@ -1,5 +1,6 @@
 export const SET_TIMER_MAX = 'SET_TIMER_MAX';
 export const ENABLE_SOUND = 'ENABLE_SOUND';
+export const ENABLE_MOTIVATION = 'ENABLE_MOTIVATION';
 export const ENABLE_VIBRATION = 'ENABLE_VIBRATION';
 export const SET_SUDDEN_DEATH = 'SET_SUDDEN_DEATH';
 export const SET_COMPENSATION = 'SET_COMPENSATION';
@@ -15,6 +16,13 @@ export function setTimerMax(seconds) {
 export function enableSound(enabled) {
   return {
     type: ENABLE_SOUND,
+    enabled,
+  };
+}
+
+export function enableMotivation(enabled) {
+  return {
+    type: ENABLE_MOTIVATION,
     enabled,
   };
 }

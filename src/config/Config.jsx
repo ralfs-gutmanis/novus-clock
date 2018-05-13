@@ -7,8 +7,8 @@ import { FEEDBACK_NAVIGATION } from './../feedback/FeedbackTypes';
 import { BonusTimeType } from './Constants';
 import RadioGroup from './radiogroup/RadioGroup';
 import NumberInput from './numberinput/NumberInput';
+import Switch from './switch/Switch';
 import './Config.css';
-import './Switch.css';
 
 class Config extends React.Component {
   static parseValue(value, type) {
@@ -27,6 +27,7 @@ class Config extends React.Component {
     this.state = {
       timerMax: props.timerMax,
       soundEnabled: props.soundEnabled,
+      motivationEnabled: props.motivationEnabled,
       vibrationEnabled: props.vibrationEnabled,
       bonusTimeType: props.bonusTimeType,
       compensationTime: props.compensationTime,
@@ -51,6 +52,7 @@ class Config extends React.Component {
     event.preventDefault();
     this.props.setTimerMax(this.state.timerMax);
     this.props.enableSound(this.state.soundEnabled);
+    this.props.enableMotivation(this.state.motivationEnabled);
     this.props.enableVibration(this.state.vibrationEnabled);
 
     if (this.state.bonusTimeType === BonusTimeType.SuddenDeath) {
@@ -112,32 +114,25 @@ class Config extends React.Component {
             />
 
             <h3 className="input-label">Feedback</h3>
-            <label className="input-container flex-vertical-center" htmlFor="soundEnabled">
-              <span className="checkbox-label">Sound Enabled</span>
-              <label className="switch" htmlFor="soundEnabled">
-                <input
-                  id="soundEnabled"
-                  type="checkbox"
-                  name="soundEnabled"
-                  checked={this.state.soundEnabled}
-                  onChange={this.handleChange}
-                />
-                <span className="slider round" />
-              </label>
-            </label>
-            <label className="input-container flex-vertical-center" htmlFor="vibrationEnabled">
-              <span className="checkbox-label">Vibration Enabled</span>
-              <label className="switch" htmlFor="vibrationEnabled">
-                <input
-                  id="vibrationEnabled"
-                  type="checkbox"
-                  name="vibrationEnabled"
-                  checked={this.state.vibrationEnabled}
-                  onChange={this.handleChange}
-                />
-                <span className="slider round" />
-              </label>
-            </label>
+            <Switch
+              name="soundEnabled"
+              label="Sound Enabled"
+              value={this.state.soundEnabled}
+              handleChange={this.handleChange}
+            />
+            <Switch
+              name="motivationEnabled"
+              label="Motivation Enabled"
+              value={this.state.motivationEnabled}
+              handleChange={this.handleChange}
+              visible={this.state.soundEnabled}
+            />
+            <Switch
+              name="vibrationEnabled"
+              label="Vibration Enabled"
+              value={this.state.vibrationEnabled}
+              handleChange={this.handleChange}
+            />
             <div className="flex-vertical-center">
               <input
                 type="submit"
@@ -165,6 +160,7 @@ Config.propTypes = {
   // Config
   timerMax: PropTypes.number.isRequired,
   soundEnabled: PropTypes.bool.isRequired,
+  motivationEnabled: PropTypes.bool.isRequired,
   vibrationEnabled: PropTypes.bool.isRequired,
   bonusTimeType: PropTypes.string.isRequired,
   compensationTime: PropTypes.number.isRequired,
@@ -173,6 +169,7 @@ Config.propTypes = {
   // Actions
   setTimerMax: PropTypes.func.isRequired,
   enableSound: PropTypes.func.isRequired,
+  enableMotivation: PropTypes.func.isRequired,
   enableVibration: PropTypes.func.isRequired,
   setSuddenDeath: PropTypes.func.isRequired,
   setCompensation: PropTypes.func.isRequired,
