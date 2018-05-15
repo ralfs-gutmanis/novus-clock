@@ -127,12 +127,12 @@ class Config extends React.Component {
             <div className="flex-vertical-center">
               <input
                 type="submit"
-                className="novus-button save"
+                className="form-button save"
                 value="SAVE"
                 onClick={() => feedback(FEEDBACK_NAVIGATION)}
               />
               <Link
-                className="novus-button cancel"
+                className="form-button cancel"
                 href="#home"
                 to="/"
                 onClick={() => feedback(FEEDBACK_NAVIGATION)}

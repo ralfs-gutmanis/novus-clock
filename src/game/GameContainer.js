@@ -4,7 +4,7 @@ import * as Actions from './ActionTypes';
 
 const mapStateToProps = state => ({
   timerMax: state.timerMax,
-  history: state.history,
+  gameHistory: state.history,
   activePlayerIndex: state.activePlayerIndex,
   bonusTimeType: state.bonusTimeType,
   compensationTime: state.compensationTime,

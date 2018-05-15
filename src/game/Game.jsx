@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import PropTypes from 'prop-types';
 import Button from './../button/Button';
 import {
@@ -14,6 +14,7 @@ import {
 import feedback from './../feedback/Feedback';
 import './../App.css';
 import { PLAYER_WHITE, PLAYER_BLACK } from './Constants';
+import Confirmation from '../confirmation/Confirmation';
 
 class Game extends Component {
   constructor(props) {
@@ -21,6 +22,10 @@ class Game extends Component {
 
     this.state = {
       timeIncrement: 100,
+      popupWarningVisible: false,
+      popupWarningMessage: '',
+      popupWarningOnConfirm: () => {},
+      popupWarningOnCancel: () => {},
     };
 
     this.resetGame();
@@ -37,8 +42,8 @@ class Game extends Component {
 
   tick() {
     const { activePlayerIndex } = this.props;
-    const currentIndex = this.props.history.length - 1;
-    const current = this.props.history[currentIndex].players.slice();
+    const currentIndex = this.props.gameHistory.length - 1;
+    const current = this.props.gameHistory[currentIndex].players.slice();
     const oldTime = current[activePlayerIndex];
 
     let newTime = current[activePlayerIndex] - (this.state.timeIncrement / 1000);
@@ -83,7 +88,7 @@ class Game extends Component {
     if (this.playerIsActive(playerNumber)) {
       feedback(BEEP_BUTTON_PRESS);
       clearInterval(this.interval); // TODO refactor --> StopCounting()
-      const history = this.props.history.slice();
+      const history = this.props.gameHistory.slice();
       const current = history[history.length - 1];
       const { activePlayerIndex } = this.props;
       const activePlayerTime = current.players[activePlayerIndex];
@@ -107,7 +112,7 @@ class Game extends Component {
   }
 
   renderButton(playerNumber) {
-    const history = this.props.history.slice();
+    const history = this.props.gameHistory.slice();
     const current = history[history.length - 1];
 
     return (
@@ -131,7 +136,23 @@ class Game extends Component {
         className={`button--reset button--left ${gameOverClass}`}
         onClick={() => {
           feedback(FEEDBACK_NAVIGATION);
-          this.resetGame();
+
+          if (!(this.props.isGameStarted && !this.props.isGameFinished)) {
+            this.resetGame();
+            return;
+          }
+
+          this.setState({
+            popupWarningVisible: true,
+            popupWarningMessage: 'You are going to reset the game, are you sure?',
+            popupWarningOnConfirm: () => {
+              this.setState({ popupWarningVisible: false });
+              this.resetGame();
+            },
+            popupWarningOnCancel: () => {
+              this.setState({ popupWarningVisible: false });
+            },
+          });
         }}
       >
         <span className="text-vertical-left">RESET</span>
@@ -144,14 +165,31 @@ class Game extends Component {
     const gameOverClass = isGameFinished ? 'button--game-over' : '';
 
     return (
-      <Link
-        href="#config"
+      <button
         className={`button--reset button--right ${gameOverClass}`}
-        to="/config"
-        onClick={() => feedback(FEEDBACK_NAVIGATION)}
+        onClick={() => {
+          feedback(FEEDBACK_NAVIGATION);
+
+          if (!(this.props.isGameStarted && !this.props.isGameFinished)) {
+            this.props.history.push('/config');
+            return;
+          }
+
+          this.setState({
+            popupWarningVisible: true,
+            popupWarningMessage: 'You are going to cancel the game and go to config, are you sure?',
+            popupWarningOnConfirm: () => {
+              this.setState({ popupWarningVisible: false });
+              this.props.history.push('/config');
+            },
+            popupWarningOnCancel: () => {
+              this.setState({ popupWarningVisible: false });
+            },
+          });
+        }}
       >
         <span className="text-vertical-right">CONFIG</span>
-      </Link>
+      </button>
     );
   }
 
@@ -165,6 +203,12 @@ class Game extends Component {
         {this.renderButton(PLAYER_BLACK)}
         {this.renderResetButton()}
         {this.renderConfigButton()}
+        <Confirmation
+          visible={this.state.popupWarningVisible}
+          message={this.state.popupWarningMessage}
+          onConfirm={this.state.popupWarningOnConfirm}
+          onCancel={this.state.popupWarningOnCancel}
+        />
       </div>
     );
   }
@@ -181,7 +225,7 @@ Game.propTypes = {
   activePlayerIndex: PropTypes.number.isRequired,
   isGameFinished: PropTypes.bool.isRequired,
   isGameStarted: PropTypes.bool.isRequired,
-  history: PropTypes.arrayOf(PropTypes.shape({
+  gameHistory: PropTypes.arrayOf(PropTypes.shape({
     players: PropTypes.arrayOf(PropTypes.number),
   })).isRequired,
 
@@ -191,6 +235,9 @@ Game.propTypes = {
   resetGame: PropTypes.func.isRequired,
   startGame: PropTypes.func.isRequired,
   stopGame: PropTypes.func.isRequired,
+
+  // Route
+  history: ReactRouterPropTypes.history.isRequired,
 };
 
 export default Game;
