@@ -4,7 +4,6 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 import {
   enableVibration,
   enableSound,
-  enableMotivation,
   setTimerMax,
   setBonusTimeType,
   setCompensationTime,
@@ -20,7 +19,6 @@ import {
 const allReducers = combineReducers({
   vibrationEnabled: enableVibration,
   soundEnabled: enableSound,
-  motivationEnabled: enableMotivation,
   timerMax: setTimerMax,
   activePlayerIndex: updateCurrentPlayer,
   history: updateHistory,

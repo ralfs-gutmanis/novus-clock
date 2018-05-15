@@ -38,7 +38,7 @@ function vibrationFeedback(type) {
 }
 
 function soundFeedback(type) {
-  const { soundEnabled, motivationEnabled } = store.getState();
+  const { soundEnabled } = store.getState();
 
   if (!soundEnabled) {
     return;
@@ -52,7 +52,7 @@ function soundFeedback(type) {
       countdownBeep();
       break;
     case BEEP_LOSING:
-      losingBeep(motivationEnabled);
+      losingBeep();
       break;
     case SAY_ONE:
       playOne();

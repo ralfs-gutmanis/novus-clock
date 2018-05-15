@@ -1,6 +1,5 @@
 import {
   ENABLE_SOUND,
-  ENABLE_MOTIVATION,
   ENABLE_VIBRATION,
   SET_TIMER_MAX,
   SET_SUDDEN_DEATH,
@@ -13,15 +12,6 @@ import { BonusTimeType } from './Constants';
 export function enableSound(state = true, action) {
   switch (action.type) {
     case ENABLE_SOUND:
-      return action.enabled;
-    default:
-      return state;
-  }
-}
-
-export function enableMotivation(state = false, action) {
-  switch (action.type) {
-    case ENABLE_MOTIVATION:
       return action.enabled;
     default:
       return state;
