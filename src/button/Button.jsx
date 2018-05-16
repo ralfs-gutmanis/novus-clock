@@ -89,7 +89,19 @@ class Button extends Component {
   }
 
   value() {
-    if (this.props.value >= 10) {
+    if (this.props.value >= 60) {
+      const minutes = Math.floor(this.props.value / 60);
+      const seconds = this.props.value % 60;
+
+      const secondsFormatted = seconds.toLocaleString(
+        undefined,
+        { maximumFractionDigits: 0, minimumIntegerDigits: 2 },
+      );
+
+      return `${minutes}:${secondsFormatted}`;
+    }
+
+    if (this.props.value > 10) {
       return Math.trunc(this.props.value);
     }
 
