@@ -2,7 +2,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 33vh;
   background-color: #444;
   grid-column-start: left;
   grid-column-end: right;
@@ -11,6 +10,14 @@
   -webkit-tap-highlight-color: rgba(255,215,0, 0.5);
   margin: 0; /* iOS fix */
   padding: 0; /* iOS fix */
+}
+
+.button--large-font {
+  font-size: 33vh;
+}
+
+.button--medium-font {
+  font-size: 22vh;
 }
 
 .button:active {

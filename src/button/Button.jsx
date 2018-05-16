@@ -88,6 +88,14 @@ class Button extends Component {
     return '';
   }
 
+  fontSize() {
+    if (this.props.value >= 60) {
+      return 'button--medium-font';
+    }
+
+    return 'button--large-font';
+  }
+
   value() {
     if (this.props.value >= 60) {
       const minutes = Math.floor(this.props.value / 60);
@@ -114,7 +122,7 @@ class Button extends Component {
   render() {
     return (
       <button
-        className={`button ${this.rippleClass()} ${this.playerColor()} ${this.cssClass()}`}
+        className={`button ${this.fontSize()} ${this.rippleClass()} ${this.playerColor()} ${this.cssClass()}`}
         onClick={() => this.handleClick()}
         onTouchStart={() => this.handleClick()}
         onKeyPress={() => this.handleClick()}
