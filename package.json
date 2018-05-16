@@ -1,6 +1,6 @@
 {
   "name": "novus-timer",
-  "version": "0.2.23",
+  "version": "0.2.24",
   "private": true,
   "dependencies": {
     "fast-deep-equal": "^2.0.1",
