@@ -7,19 +7,29 @@ function Confirmation(props) {
     return '';
   }
 
+  const reverse = props.reverse ? 'reverse' : '';
+
   return (
-    <div className="modal-container">
-      <div className="modal-content">
+    <div
+      className="modal-container"
+      onClick={() => props.onCancel()}
+      role="presentation"
+    >
+      <div
+        className={`modal-content ${reverse}`}
+        onClick={e => e.stopPropagation()}
+        role="presentation"
+      >
         <p>{props.message}</p>
         <button
           className="form-button save"
-          onClick={() => props.onConfirm()}
+          onClick={(e) => { e.stopPropagation(); props.onConfirm(); }}
         >
             YES
         </button>
         <button
           className="form-button cancel"
-          onClick={() => props.onCancel()}
+          onClick={(e) => { e.stopPropagation(); props.onCancel(); }}
         >
           NO
         </button>
@@ -31,12 +41,14 @@ function Confirmation(props) {
 Confirmation.propTypes = {
   message: PropTypes.number.isRequired,
   visible: PropTypes.bool,
+  reverse: PropTypes.bool,
   onConfirm: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
 };
 
 Confirmation.defaultProps = {
   visible: false,
+  reverse: false,
 };
 
 export default Confirmation;

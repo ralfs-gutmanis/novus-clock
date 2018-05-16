@@ -26,3 +26,7 @@
 .modal-content p {
   margin-bottom: 30px;
 }
+
+.reverse {
+  transform: scale(-1, -1);
+}

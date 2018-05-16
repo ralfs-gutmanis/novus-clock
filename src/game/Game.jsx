@@ -208,6 +208,7 @@ class Game extends Component {
           message={this.state.popupWarningMessage}
           onConfirm={this.state.popupWarningOnConfirm}
           onCancel={this.state.popupWarningOnCancel}
+          reverse={this.props.activePlayerIndex === PLAYER_WHITE}
         />
       </div>
     );
