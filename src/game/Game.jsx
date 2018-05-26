@@ -131,29 +131,32 @@ class Game extends Component {
     const { isGameFinished } = this.props;
     const gameOverClass = isGameFinished ? 'button--game-over' : '';
 
+    const handleClick = () => {
+      feedback(FEEDBACK_NAVIGATION);
+
+      if (!(this.props.isGameStarted && !this.props.isGameFinished)) {
+        this.resetGame();
+        return;
+      }
+
+      this.setState({
+        popupWarningVisible: true,
+        popupWarningMessage: 'You are going to reset the game, are you sure?',
+        popupWarningOnConfirm: () => {
+          this.setState({ popupWarningVisible: false });
+          this.resetGame();
+        },
+        popupWarningOnCancel: () => {
+          this.setState({ popupWarningVisible: false });
+        },
+      });
+    };
+
     return (
       <button
         className={`button--reset button--left ${gameOverClass}`}
-        onClick={() => {
-          feedback(FEEDBACK_NAVIGATION);
-
-          if (!(this.props.isGameStarted && !this.props.isGameFinished)) {
-            this.resetGame();
-            return;
-          }
-
-          this.setState({
-            popupWarningVisible: true,
-            popupWarningMessage: 'You are going to reset the game, are you sure?',
-            popupWarningOnConfirm: () => {
-              this.setState({ popupWarningVisible: false });
-              this.resetGame();
-            },
-            popupWarningOnCancel: () => {
-              this.setState({ popupWarningVisible: false });
-            },
-          });
-        }}
+        onClick={() => handleClick()}
+        onTouchStart={() => handleClick()}
       >
         <span className="text-vertical-left">RESET</span>
       </button>
@@ -164,29 +167,32 @@ class Game extends Component {
     const { isGameFinished } = this.props;
     const gameOverClass = isGameFinished ? 'button--game-over' : '';
 
+    const handleClick = () => {
+      feedback(FEEDBACK_NAVIGATION);
+
+      if (!(this.props.isGameStarted && !this.props.isGameFinished)) {
+        this.props.history.push('/config');
+        return;
+      }
+
+      this.setState({
+        popupWarningVisible: true,
+        popupWarningMessage: 'You are going to cancel the game and go to config, are you sure?',
+        popupWarningOnConfirm: () => {
+          this.setState({ popupWarningVisible: false });
+          this.props.history.push('/config');
+        },
+        popupWarningOnCancel: () => {
+          this.setState({ popupWarningVisible: false });
+        },
+      });
+    };
+
     return (
       <button
         className={`button--reset button--right ${gameOverClass}`}
-        onClick={() => {
-          feedback(FEEDBACK_NAVIGATION);
-
-          if (!(this.props.isGameStarted && !this.props.isGameFinished)) {
-            this.props.history.push('/config');
-            return;
-          }
-
-          this.setState({
-            popupWarningVisible: true,
-            popupWarningMessage: 'You are going to cancel the game and go to config, are you sure?',
-            popupWarningOnConfirm: () => {
-              this.setState({ popupWarningVisible: false });
-              this.props.history.push('/config');
-            },
-            popupWarningOnCancel: () => {
-              this.setState({ popupWarningVisible: false });
-            },
-          });
-        }}
+        onClick={() => handleClick()}
+        onTouchStart={() => handleClick()}
       >
         <span className="text-vertical-right">CONFIG</span>
       </button>
