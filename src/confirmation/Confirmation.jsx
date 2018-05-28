@@ -39,7 +39,7 @@ function Confirmation(props) {
 }
 
 Confirmation.propTypes = {
-  message: PropTypes.number.isRequired,
+  message: PropTypes.string.isRequired,
   visible: PropTypes.bool,
   reverse: PropTypes.bool,
   onConfirm: PropTypes.func.isRequired,

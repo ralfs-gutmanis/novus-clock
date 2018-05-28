@@ -131,7 +131,8 @@ class Game extends Component {
     const { isGameFinished } = this.props;
     const gameOverClass = isGameFinished ? 'button--game-over' : '';
 
-    const handleClick = () => {
+    const handleClick = (e) => {
+      e.preventDefault();
       feedback(FEEDBACK_NAVIGATION);
 
       if (!(this.props.isGameStarted && !this.props.isGameFinished)) {
@@ -155,8 +156,9 @@ class Game extends Component {
     return (
       <button
         className={`button--reset button--left ${gameOverClass}`}
-        onClick={() => handleClick()}
-        onTouchStart={() => handleClick()}
+        onClick={e => handleClick(e)}
+        onTouchStart={e => handleClick(e)}
+        onTouchEnd={(e) => { e.preventDefault(); }}
       >
         <span className="text-vertical-left">RESET</span>
       </button>
@@ -167,7 +169,8 @@ class Game extends Component {
     const { isGameFinished } = this.props;
     const gameOverClass = isGameFinished ? 'button--game-over' : '';
 
-    const handleClick = () => {
+    const handleClick = (e) => {
+      e.preventDefault();
       feedback(FEEDBACK_NAVIGATION);
 
       if (!(this.props.isGameStarted && !this.props.isGameFinished)) {
@@ -191,8 +194,9 @@ class Game extends Component {
     return (
       <button
         className={`button--reset button--right ${gameOverClass}`}
-        onClick={() => handleClick()}
-        onTouchStart={() => handleClick()}
+        onClick={e => handleClick(e)}
+        onTouchStart={e => handleClick(e)}
+        onTouchEnd={(e) => { e.preventDefault(); }}
       >
         <span className="text-vertical-right">CONFIG</span>
       </button>
